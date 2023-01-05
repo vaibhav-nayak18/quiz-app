@@ -1,11 +1,32 @@
 import React, { useState } from "react";
 import Options from "./Options";
 
-const Question = ({ question, id, options, questionNumber, style }) => {
+const Question = ({
+    question,
+    id,
+    data,
+    options,
+    questionNumber,
+    style,
+    showAnswer,
+}) => {
     const [selectedOptions, setSelectedOptions] = useState("");
     const selectAnswer = (option) => {
-        setSelectedOptions(option);
+        data.userAnswer = option;
+        if (!showAnswer) {
+            setSelectedOptions(option);
+        }
     };
+
+    function getBgColor(option) {
+        if (data.answer === option) {
+            return "bg-green-700";
+        } else if (option === data.userAnswer) {
+            return "bg-yellow-600";
+        }
+        return "bg-white";
+    }
+
     return (
         <div className={style}>
             <div className="flex gap-2 text-xl">
@@ -21,8 +42,11 @@ const Question = ({ question, id, options, questionNumber, style }) => {
                                 option={option}
                                 selectAnswer={selectAnswer}
                                 style={
-                                    option === selectedOptions &&
-                                    "bg-yellow-700"
+                                    showAnswer
+                                        ? getBgColor(option)
+                                        : selectedOptions === option
+                                        ? "bg-yellow-700"
+                                        : "bg-white"
                                 }
                             />
                         );
